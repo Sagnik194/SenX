@@ -3,7 +3,7 @@
 **SenX** is a Python-based Business Intelligence and Analytics Platform designed to transform raw business data into meaningful insights through data cleaning, sales analytics, customer segmentation, forecasting and automated reporting.
 
 The platform allows users to upload business datasets, process and validate data, store records in a MySQL database, explore interactive dashboards and generate downloadable business reports.
-
+# Live application: senx-platform.onrender.com
 ## Key Features
 
 ### 1. Executive Dashboard
