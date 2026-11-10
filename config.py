@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 from sqlalchemy.engine import URL
 
-# Load environment variables from .env
 load_dotenv()
 
 DB_HOST = os.getenv("DB_HOST", "localhost")
@@ -12,8 +11,9 @@ DB_NAME = os.getenv("DB_NAME", "senx_db")
 DB_USER = os.getenv("DB_USER", "senx_app")
 DB_PASSWORD = os.getenv("DB_PASSWORD", "")
 
-# Safely construct the database URL.
-# This handles special characters in passwords.
+# Optional SSL CA certificate path for cloud MySQL.
+DB_SSL_CA = os.getenv("DB_SSL_CA", "").strip()
+
 DATABASE_URL = URL.create(
     drivername="mysql+pymysql",
     username=DB_USER,

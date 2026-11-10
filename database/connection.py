@@ -2,19 +2,30 @@
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
-from config import DATABASE_URL
+from config import DATABASE_URL, DB_SSL_CA
 
 
-# Create database engine
+connect_args = {}
+
+# Enable certificate-verified SSL when configured.
+if DB_SSL_CA:
+    connect_args["ssl"] = {
+        "ca": DB_SSL_CA
+    }
+
+
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
     pool_recycle=3600,
+    pool_size=5,
+    max_overflow=2,
+    pool_timeout=30,
+    connect_args=connect_args,
     echo=False
 )
 
 
-# Create database session factory
 SessionLocal = sessionmaker(
     bind=engine,
     autoflush=False,
@@ -22,12 +33,10 @@ SessionLocal = sessionmaker(
 )
 
 
-# Base class for all database models
 class Base(DeclarativeBase):
     pass
 
 
-# Database session dependency
 def get_db():
     db = SessionLocal()
 
@@ -37,11 +46,13 @@ def get_db():
         db.close()
 
 
-# Test MySQL connection
 def test_connection():
     try:
         with engine.connect() as connection:
-            result = connection.execute(text("SELECT VERSION()"))
+            result = connection.execute(
+                text("SELECT VERSION()")
+            )
+
             version = result.scalar()
 
             return {
